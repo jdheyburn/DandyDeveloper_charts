@@ -591,3 +591,6 @@ extraContainers: []
 extraVolumes: []
 #  - name: empty
 #    emptyDir: {}
+
+networkPolicy:
+  enabled: false

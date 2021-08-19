@@ -1,17 +1,20 @@
 {{- if .Values.networkPolicy.enabled }}
+{{- $root := . }}
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
   name: {{ template "redis-ha.fullname" . }}-network-policy
 {{- if .Values.networkPolicy.annotations }}
   annotations:
-{{ toYaml .Values.networkPolicy.annotations | indent 4}}
+    {{- range $key, $value := .Values.networkPolicy.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
 {{- end }}
   labels:
 {{ include "labels.standard" . | indent 4 }}
-  {{- if .Values.networkPolicy.labels }}
-{{ toYaml .Values.networkPolicy.labels | indent 4 }}
-  {{- end }}
+    {{- range $key, $value := .Values.networkPolicy.labels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
 spec:
   podSelector:
     matchLabels:
@@ -38,9 +41,9 @@ spec:
 {{- if $rule.ports }}
 {{ toYaml $rule.ports | indent 9 }}  
 {{- else }}
-        - port: {{ .Values.redis.port }}
+        - port: {{ $root.Values.redis.port }}
           protocol: TCP
-        - port: {{ .Values.sentinel.port }}
+        - port: {{ $root.Values.sentinel.port }}
           protocol: TCP
 {{- end }}
 {{- end }}
@@ -62,9 +65,9 @@ spec:
 {{- if $rule.ports }}
 {{ toYaml $rule.ports | indent 9 }}
 {{- else }}
-        - port: {{ .Values.redis.port }}
+        - port: {{ $root.Values.redis.port }}
           protocol: TCP
-        - port: {{ .Values.sentinel.port }}
+        - port: {{ $root.Values.sentinel.port }}
           protocol: TCP
 {{- end }}
 {{- end }}

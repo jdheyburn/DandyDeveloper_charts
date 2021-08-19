@@ -594,3 +594,6 @@ extraVolumes: []
 
 # Labels added here are applied to all created resources
 additionalLabels: {}
+
+networkPolicy:
+  enabled: false
